@@ -1,0 +1,3 @@
+APP_NAME: gogodata
+PORT: 8080
+secret: gogodata-datagogo
