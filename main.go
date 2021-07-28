@@ -2,17 +2,28 @@ package main
 
 import (
 	"fmt"
-	"net/http"
-
 	"gogodata/auth"
+	"gogodata/conf"
 	_ "gogodata/conf"
 	"gogodata/middleware"
+	"gorm.io/gorm"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
 )
 
+type User struct {
+	gorm.Model
+	Name string
+	Age int
+}
 func main() {
+	sqlDB := conf.InitDB()
+	defer sqlDB.Close()
+
+	conf.DB.AutoMigrate(&User{})
+
 	r := gin.Default()
 	r.Use(middleware.CORSMiddleware())
 

@@ -1,3 +1,4 @@
 APP_NAME: gogodata
 PORT: 8080
 secret: gogodata-datagogo
+db: root:root@tcp(127.0.0.1:3306)/gogodata?charset=utf8mb4&parseTime=True&loc=Local
