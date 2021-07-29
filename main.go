@@ -5,24 +5,20 @@ import (
 	"gogodata/auth"
 	"gogodata/conf"
 	_ "gogodata/conf"
+	"gogodata/group"
 	"gogodata/middleware"
-	"gorm.io/gorm"
+	"gogodata/model"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
 )
 
-type User struct {
-	gorm.Model
-	Name string
-	Age int
-}
 func main() {
 	sqlDB := conf.InitDB()
 	defer sqlDB.Close()
 
-	conf.DB.AutoMigrate(&User{})
+	conf.DB.AutoMigrate(&model.User{}, &model.Group{}, &model.DataSource{})
 
 	r := gin.Default()
 	r.Use(middleware.CORSMiddleware())
@@ -41,6 +37,16 @@ func main() {
 		{
 			authRouter.POST("/login", auth.DoLogin)
 			authRouter.GET("/me", middleware.AuthMiddleware(), auth.DoMe)
+		}
+
+		groupRouter := v1.Group("/group")
+		groupRouter.Use(middleware.AuthMiddleware())
+		{
+			groupRouter.POST("/", group.DoCreate)
+			groupRouter.GET("/", group.DoFindAll)
+			groupRouter.GET("/:id", group.DoFindById)
+			groupRouter.DELETE("/:id", group.DoDelete)
+			groupRouter.PUT("/:id", group.DoUpdate)
 		}
 	}
 	r.Run(fmt.Sprintf(":%d", viper.GetInt("port")))

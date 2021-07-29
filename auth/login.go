@@ -1,18 +1,14 @@
 package auth
 
 import (
+	"gogodata/model"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
-type Login struct {
-	User     string `form:"user" json:"user" xml:"user"  binding:"required"`
-	Password string `form:"password" json:"password" xml:"password" binding:"required"`
-}
-
 func DoLogin(c *gin.Context) {
-	var json Login
+	var json model.Login
 	if err := c.ShouldBindJSON(&json); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 		return
