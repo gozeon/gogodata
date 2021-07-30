@@ -56,6 +56,7 @@ func main() {
 			dataSourceRouter.POST("/", dataSource.DoCreate)
 			dataSourceRouter.GET("/", dataSource.DoFindAll)
 			dataSourceRouter.GET("/:id", dataSource.DoFindById)
+			dataSourceRouter.GET("/info/:id", dataSource.DoShowData)
 			dataSourceRouter.DELETE("/:id", dataSource.DoDelete)
 			dataSourceRouter.PUT("/:id", dataSource.DoUpdate)
 
