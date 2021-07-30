@@ -3,23 +3,26 @@ package conf
 import (
 	"database/sql"
 	"fmt"
+	"time"
+
 	"github.com/spf13/viper"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
-	"time"
 )
 
 var DB *gorm.DB
 
-func init()  {
+func init() {
 	var err error
-	DB, err = gorm.Open(mysql.Open(viper.GetString("db")), &gorm.Config{})
+	DB, err = gorm.Open(mysql.Open(viper.GetString("db")), &gorm.Config{
+		// Logger: logger.Default.LogMode(logger.Info),
+	})
 	if err != nil {
 		panic(fmt.Errorf("Fatal error open db: %s \n", err))
 	}
 }
 
-func InitDB()*sql.DB {
+func InitDB() *sql.DB {
 	sqlDB, err := DB.DB()
 	if err != nil {
 		panic(fmt.Errorf("Fatal error set db: %s \n", err))
