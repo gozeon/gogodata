@@ -5,6 +5,7 @@ import (
 	"gogodata/auth"
 	"gogodata/conf"
 	_ "gogodata/conf"
+	dataSource "gogodata/data-source"
 	"gogodata/group"
 	"gogodata/middleware"
 	"gogodata/model"
@@ -47,6 +48,17 @@ func main() {
 			groupRouter.GET("/:id", group.DoFindById)
 			groupRouter.DELETE("/:id", group.DoDelete)
 			groupRouter.PUT("/:id", group.DoUpdate)
+		}
+
+		dataSourceRouter := v1.Group("/ds")
+		dataSourceRouter.Use(middleware.AuthMiddleware())
+		{
+			dataSourceRouter.POST("/", dataSource.DoCreate)
+			dataSourceRouter.GET("/", dataSource.DoFindAll)
+			dataSourceRouter.GET("/:id", dataSource.DoFindById)
+			dataSourceRouter.DELETE("/:id", dataSource.DoDelete)
+			dataSourceRouter.PUT("/:id", dataSource.DoUpdate)
+
 		}
 	}
 	r.Run(fmt.Sprintf(":%d", viper.GetInt("port")))
