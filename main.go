@@ -51,15 +51,15 @@ func main() {
 		}
 
 		dataSourceRouter := v1.Group("/ds")
+		// 渲染data，勿需权限
+		dataSourceRouter.GET("/info/:id", dataSource.DoShowData)
 		dataSourceRouter.Use(middleware.AuthMiddleware())
 		{
 			dataSourceRouter.POST("/", dataSource.DoCreate)
 			dataSourceRouter.GET("/", dataSource.DoFindAll)
 			dataSourceRouter.GET("/:id", dataSource.DoFindById)
-			dataSourceRouter.GET("/info/:id", dataSource.DoShowData)
 			dataSourceRouter.DELETE("/:id", dataSource.DoDelete)
 			dataSourceRouter.PUT("/:id", dataSource.DoUpdate)
-
 		}
 	}
 	r.Run(fmt.Sprintf(":%d", viper.GetInt("port")))
