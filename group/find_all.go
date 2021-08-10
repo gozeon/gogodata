@@ -16,7 +16,7 @@ func DoFindAll(c *gin.Context) {
 	searchLike.WriteString("%")
 	searchLike.WriteString(search)
 	searchLike.WriteString("%")
-	result := conf.DB.Where("name LIKE ?", searchLike.String()).Or("description LIKE ?", searchLike.String()).Find(&json)
+	result := conf.DB.Where("create_user = ?", c.MustGet("user").(string)).Where("name LIKE ?", searchLike.String()).Or("description LIKE ?", searchLike.String()).Find(&json)
 	if result.Error != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": result.Error.Error()})
 		return

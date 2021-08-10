@@ -14,7 +14,7 @@ func DoLogin(c *gin.Context) {
 		return
 	}
 
-	if json.User != "admin" || json.Password != "admin" {
+	if json.User != "admin" && json.Password != "admin" {
 		c.JSON(http.StatusUnauthorized, gin.H{"message": "unauthorized"})
 		return
 	}
