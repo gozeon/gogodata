@@ -20,7 +20,7 @@ func DoShowData(c *gin.Context) {
 	}
 
 	if len(json.Data) == 0 {
-		c.JSON(http.StatusOK, json.Data)
+		c.String(http.StatusOK, json.Data)
 		return
 	}
 
@@ -28,7 +28,7 @@ func DoShowData(c *gin.Context) {
 
 	err := jsonU.Unmarshal([]byte(json.Data), &jsonMap)
 	if err != nil {
-		c.JSON(http.StatusOK, json.Data)
+		c.String(http.StatusOK, json.Data)
 		// c.JSON(http.StatusBadRequest, gin.H{"message": result.Error.Error()})
 		return
 	}
