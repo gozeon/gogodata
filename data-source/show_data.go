@@ -19,11 +19,17 @@ func DoShowData(c *gin.Context) {
 		return
 	}
 
+	if len(json.Data) == 0 {
+		c.JSON(http.StatusOK, json.Data)
+		return
+	}
+
 	jsonMap := make(map[string]interface{})
 
 	err := jsonU.Unmarshal([]byte(json.Data), &jsonMap)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"message": result.Error.Error()})
+		c.JSON(http.StatusOK, json.Data)
+		// c.JSON(http.StatusBadRequest, gin.H{"message": result.Error.Error()})
 		return
 	}
 
