@@ -15,9 +15,11 @@ func DoShowData(c *gin.Context) {
 
 	result := conf.DB.Where("id = ?", id).First(&json)
 	if result.Error != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"message": result.Error.Error()})
+		c.JSON(http.StatusNotFound, gin.H{"message": result.Error.Error()})
 		return
 	}
+
+	c.Set("show_data_group_id", json.GroupID)
 
 	if len(json.Data) == 0 {
 		c.String(http.StatusOK, json.Data)

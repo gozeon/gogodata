@@ -9,6 +9,7 @@ import (
 	"gogodata/group"
 	"gogodata/middleware"
 	"gogodata/model"
+	"gogodata/stats"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -19,7 +20,7 @@ func main() {
 	sqlDB := conf.InitDB()
 	defer sqlDB.Close()
 
-	conf.DB.AutoMigrate(&model.User{}, &model.Group{}, &model.DataSource{})
+	conf.DB.AutoMigrate(&model.User{}, &model.Group{}, &model.DataSource{}, &model.Stats{})
 
 	r := gin.Default()
 	r.Use(middleware.CORSMiddleware())
@@ -52,7 +53,7 @@ func main() {
 
 		dataSourceRouter := v1.Group("/ds")
 		// 渲染data，勿需权限
-		dataSourceRouter.GET("/info/:id", dataSource.DoShowData)
+		dataSourceRouter.GET("/info/:id", middleware.CollectMiddleware(), dataSource.DoShowData)
 		dataSourceRouter.Use(middleware.AuthMiddleware())
 		{
 			dataSourceRouter.POST("/", dataSource.DoCreate)
@@ -60,6 +61,11 @@ func main() {
 			dataSourceRouter.GET("/:id", dataSource.DoFindById)
 			dataSourceRouter.DELETE("/:id", dataSource.DoDelete)
 			dataSourceRouter.PUT("/:id", dataSource.DoUpdate)
+		}
+
+		stateRouter := v1.Group("/stats")
+		{
+			stateRouter.GET("/", stats.DoFindAll)
 		}
 	}
 	r.Run(fmt.Sprintf(":%d", viper.GetInt("port")))
